@@ -217,7 +217,7 @@ public:
 	 * much for anything else.  Returns nullptr if the address is
 	 * not supported.
 	 */
-	constexpr std::span<const std::byte> GetSteadyPart() const noexcept {
+	std::span<const std::byte> GetSteadyPart() const noexcept {
 		return {
 			reinterpret_cast<const std::byte *>(&address.sin_addr),
 			sizeof(address.sin_addr),
