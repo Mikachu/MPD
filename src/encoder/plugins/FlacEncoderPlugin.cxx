@@ -17,7 +17,6 @@
 #include <FLAC/metadata.h>
 
 #include <algorithm>
-#include <utility> // for std::unreachable()
 
 class FlacEncoder final : public Encoder {
 	const AudioFormat audio_format;
@@ -265,7 +264,7 @@ ToFlac32(PcmBuffer &buffer, std::span<const std::byte> src,
 		return FromBytesStrict<const int32_t>(src);
 
 	default:
-		std::unreachable();
+		gcc_unreachable();
 	}
 }
 

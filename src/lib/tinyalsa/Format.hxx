@@ -8,8 +8,6 @@
 
 #include <tinyalsa/pcm.h>
 
-#include <utility> // for std::unreachable()
-
 namespace TinyAlsa {
 
 /**
@@ -47,7 +45,7 @@ ToPcmFormat(SampleFormat sample_format) noexcept
 			: PCM_FORMAT_S32_BE;
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }
 
 /**

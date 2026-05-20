@@ -5,8 +5,6 @@
 #include "Buffer.hxx"
 #include "util/SpanCast.hxx"
 
-#include <utility> // for std::unreachable()
-
 /*
  * According to:
  *  - https://xiph.org/flac/format.html#frame_header
@@ -202,5 +200,5 @@ ToAlsaChannelOrder(PcmBuffer &buffer, std::span<const std::byte> src,
 							 channels));
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }

@@ -19,7 +19,6 @@
 #include <iterator>
 #include <array>
 #include <stdexcept>
-#include <utility> // for std::unreachable()
 
 using namespace Sqlite;
 
@@ -436,7 +435,8 @@ StickerDatabase::BindFind(const char *type, std::string_view base_uri,
 		return sql;
 	}
 
-	std::unreachable();
+	assert(false);
+	gcc_unreachable();
 }
 
 Co::Generator<StickerDatabase::FindRecord>

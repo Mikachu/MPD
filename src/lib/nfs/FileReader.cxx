@@ -287,7 +287,8 @@ NfsFileReader::OnNfsCallback(unsigned status, void *data) noexcept
 	case State::DEFER:
 	case State::MOUNT:
 	case State::IDLE:
-		std::unreachable();
+		assert(false);
+		gcc_unreachable();
 
 	case State::OPEN:
 		OpenCallback((struct nfsfh *)data);
@@ -311,7 +312,8 @@ NfsFileReader::OnNfsError(std::exception_ptr &&e) noexcept
 	case State::DEFER:
 	case State::MOUNT:
 	case State::IDLE:
-		std::unreachable();
+		assert(false);
+		gcc_unreachable();
 
 	case State::OPEN:
 		connection->RemoveLease(*this);

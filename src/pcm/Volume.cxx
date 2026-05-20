@@ -12,7 +12,6 @@
 
 #include <cassert>
 #include <cstdint>
-#include <utility> // for std::unreachable()
 
 #include <string.h>
 
@@ -195,7 +194,8 @@ PcmVolume::Apply(std::span<const std::byte> src) noexcept
 
 	switch (format) {
 	case SampleFormat::UNDEFINED:
-		std::unreachable();
+		assert(false);
+		gcc_unreachable();
 
 	case SampleFormat::S8:
 		pcm_volume_change_8(dither, (int8_t *)data,

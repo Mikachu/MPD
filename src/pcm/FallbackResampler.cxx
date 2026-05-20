@@ -7,7 +7,6 @@
 
 #include <algorithm> // for std::copy_n()
 #include <cassert>
-#include <utility> // for std::unreachable()
 
 AudioFormat
 FallbackPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
@@ -17,7 +16,8 @@ FallbackPcmResampler::Open(AudioFormat &af, unsigned new_sample_rate)
 
 	switch (af.format) {
 	case SampleFormat::UNDEFINED:
-		std::unreachable();
+		assert(false);
+		gcc_unreachable();
 
 	case SampleFormat::S8:
 		af.format = SampleFormat::S16;
@@ -114,7 +114,8 @@ FallbackPcmResampler::Resample(std::span<const std::byte> src)
 	case SampleFormat::UNDEFINED:
 	case SampleFormat::S8:
 	case SampleFormat::DSD:
-		std::unreachable();
+		assert(false);
+		gcc_unreachable();
 
 	case SampleFormat::S16:
 		return pcm_resample_fallback_void<int16_t>(buffer,
@@ -133,5 +134,6 @@ FallbackPcmResampler::Resample(std::span<const std::byte> src)
 							   out_rate);
 	}
 
-	std::unreachable();
+	assert(false);
+	gcc_unreachable();
 }

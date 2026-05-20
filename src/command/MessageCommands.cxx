@@ -13,7 +13,6 @@
 #include <cassert>
 #include <set>
 #include <string>
-#include <utility> // for std::unreachable()
 
 CommandResult
 handle_subscribe(Client &client, Request args, Response &r)
@@ -38,7 +37,9 @@ handle_subscribe(Client &client, Request args, Response &r)
 		return CommandResult::ERROR;
 	}
 
-	std::unreachable();
+	/* unreachable */
+	assert(false);
+	gcc_unreachable();
 }
 
 CommandResult

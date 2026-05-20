@@ -14,11 +14,10 @@
 #include "fs/AllocatedPath.hxx"
 #include "input/InputStream.hxx"
 #include "uri/Extract.hxx"
+#include "util/Compiler.h"
 #include "util/ScopeExit.hxx"
 #include "util/StringCompare.hxx"
 #include "LocateUri.hxx"
-
-#include <utility> // for std::unreachable()
 
 using std::string_view_literals::operator""sv;
 
@@ -147,5 +146,5 @@ TagScanAny(Client &client, const char *uri, TagHandler &handler)
 		return TagScanFile(located_uri.path, handler);
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }

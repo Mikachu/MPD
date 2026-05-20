@@ -4,8 +4,9 @@
 #ifndef MPD_PCM_SAMPLE_FORMAT_HXX
 #define MPD_PCM_SAMPLE_FORMAT_HXX
 
+#include "util/Compiler.h"
+
 #include <cstdint>
-#include <utility> // for std::unreachable()
 
 #if defined(_WIN32)
 /* on WIN32, "FLOAT" is already defined, and this triggers -Wshadow */
@@ -89,7 +90,7 @@ sample_format_size(SampleFormat format) noexcept
 		return 0;
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }
 
 /**

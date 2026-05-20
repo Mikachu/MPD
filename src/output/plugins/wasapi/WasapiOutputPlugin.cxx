@@ -39,7 +39,6 @@
 #include <cmath>
 #include <new> // for std::hardware_destructive_interference_size
 #include <optional>
-#include <utility> // for std::unreachable()
 #include <variant>
 
 #include <audioclient.h>
@@ -72,7 +71,7 @@ GetChannelMask(const uint8_t channels) noexcept
 	case 8:
 		return KSAUDIO_SPEAKER_7POINT1_SURROUND;
 	default:
-		std::unreachable();
+		gcc_unreachable();
 	}
 }
 

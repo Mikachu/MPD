@@ -16,7 +16,6 @@
 #include <cerrno>
 #include <iterator>
 #include <stdexcept>
-#include <utility> // for std::unreachable()
 
 #include <sys/stat.h>
 #include <sys/ioctl.h>
@@ -410,7 +409,8 @@ sample_format_to_oss(SampleFormat format) noexcept
 #endif
 	}
 
-	std::unreachable();
+	assert(false);
+	gcc_unreachable();
 }
 
 /**

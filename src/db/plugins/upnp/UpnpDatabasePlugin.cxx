@@ -478,7 +478,8 @@ VisitObject(const UPnPDirObject &object, const char *uri,
 {
 	switch (object.type) {
 	case UPnPDirObject::Type::UNKNOWN:
-		std::unreachable();
+		assert(false);
+		gcc_unreachable();
 
 	case UPnPDirObject::Type::CONTAINER:
 		if (visit_directory)

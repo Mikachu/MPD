@@ -28,7 +28,6 @@
 
 #include <cassert>
 #include <stdexcept>
-#include <utility> // for std::unreachable()
 
 #include <string.h>
 
@@ -129,7 +128,8 @@ audio_output_load_mixer(EventLoop &event_loop, FilteredAudioOutput &ao,
 		return mixer;
 	}
 
-	std::unreachable();
+	assert(false);
+	gcc_unreachable();
 }
 
 void

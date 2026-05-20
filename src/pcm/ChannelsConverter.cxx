@@ -9,7 +9,6 @@
 #include "util/SpanCast.hxx"
 
 #include <cassert>
-#include <utility> // for std::unreachable()
 
 void
 PcmChannelsConverter::Open(SampleFormat _format,
@@ -49,13 +48,13 @@ PcmChannelsConverter::Convert(std::span<const std::byte> src) noexcept
 	switch (format) {
 	case SampleFormat::UNDEFINED:
 	case SampleFormat::S8:
-		std::unreachable();
+		gcc_unreachable();
 
 	case SampleFormat::DSD:
 #ifdef ENABLE_DSD
 		return pcm_convert_channels_dsd(buffer, dest_channels, src_channels, src);
 #else
-		std::unreachable();
+		gcc_unreachable();
 #endif
 
 	case SampleFormat::S16:
@@ -79,5 +78,6 @@ PcmChannelsConverter::Convert(std::span<const std::byte> src) noexcept
 								FromBytesStrict<const float>(src)));
 	}
 
-	std::unreachable();
+	assert(false);
+	gcc_unreachable();
 }

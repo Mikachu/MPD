@@ -42,7 +42,6 @@
 #include <fmt/format.h>
 
 #include <cassert>
-#include <utility> // for std::unreachable()
 
 static void
 print_spl_list(Response &r, const PlaylistVector &list)
@@ -123,7 +122,7 @@ handle_listfiles(Client &client, Request args, Response &r)
 		return handle_listfiles_local(r, located_uri.path);
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }
 
 class PrintTagHandler final : public NullTagHandler {
@@ -226,7 +225,7 @@ handle_lsinfo(Client &client, Request args, Response &r)
 					  located_uri.path);
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }
 
 #ifdef ENABLE_DATABASE

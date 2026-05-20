@@ -12,7 +12,6 @@
 #include "config.h"
 
 #include <cassert>
-#include <utility> // for std::unreachable()
 
 #ifdef ENABLE_DATABASE
 
@@ -70,7 +69,7 @@ SongLoader::LoadSong(const LocatedUri &located_uri) const
 		return LoadFile(located_uri.canonical_uri, located_uri.path);
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }
 
 DetachedSong

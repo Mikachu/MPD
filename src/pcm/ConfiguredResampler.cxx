@@ -19,7 +19,6 @@
 #endif
 
 #include <cassert>
-#include <utility> // for std::unreachable()
 
 #include <string.h>
 
@@ -161,5 +160,5 @@ pcm_resampler_create()
 #endif
 	}
 
-	std::unreachable();
+	gcc_unreachable();
 }

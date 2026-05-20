@@ -6,7 +6,7 @@
 #include "lib/xiph/FlacAudioFormat.hxx"
 #include "lib/fmt/RuntimeError.hxx"
 
-#include <utility> // for std::unreachable()
+#include <cassert>
 
 void
 FlacPcmImport::Open(unsigned sample_rate, unsigned bits_per_sample,
@@ -87,5 +87,6 @@ FlacPcmImport::Import(const FLAC__int32 *const src[], size_t n_frames) noexcept
 		break;
 	}
 
-	std::unreachable();
+	assert(false);
+	gcc_unreachable();
 }
