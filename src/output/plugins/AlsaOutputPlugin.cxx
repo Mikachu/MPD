@@ -8,6 +8,7 @@
 #include "lib/alsa/HwSetup.hxx"
 #include "lib/alsa/NonBlock.hxx"
 #include "lib/alsa/PeriodBuffer.hxx"
+#include "lib/alsa/Version.hxx"
 #include "lib/fmt/RuntimeError.hxx"
 #include "lib/fmt/ToBuffer.hxx"
 #include "../OutputAPI.hxx"
@@ -166,6 +167,17 @@ class AlsaOutput final
 	 */
 	bool in_stop_dsd_silence;
 #endif
+
+	/**
+	 * Is this a buggy alsa-lib version, which needs a workaround
+	 * for the snd_pcm_drain() bug always returning -EAGAIN?  See
+	 * alsa-lib commits fdc898d41135 and e4377b16454f for details.
+	 * This bug was fixed in alsa-lib version 1.1.4.
+	 *
+	 * The workaround is to re-enable blocking mode for the
+	 * snd_pcm_drain() call.
+	 */
+	bool work_around_drain_bug;
 
 	/**
 	 * After Open() or Cancel(), has this output been activated by
@@ -665,6 +677,19 @@ AlsaOutput::SetupOrDop(AudioFormat &audio_format, PcmExport::Params &params
 #endif
 }
 
+static constexpr bool
+MaybeDmix(snd_pcm_type_t type)
+{
+	return type == SND_PCM_TYPE_DMIX || type == SND_PCM_TYPE_PLUG;
+}
+
+[[gnu::pure]]
+static bool
+MaybeDmix(snd_pcm_t *pcm) noexcept
+{
+	return MaybeDmix(snd_pcm_type(pcm));
+}
+
 static const Alsa::AllowedFormat &
 BestMatch(const std::forward_list<Alsa::AllowedFormat> &haystack,
 	  const AudioFormat &needle)
@@ -732,6 +757,9 @@ AlsaOutput::Open(AudioFormat &audio_format)
 		std::throw_with_nested(FmtRuntimeError("Error opening ALSA device {:?}",
 						       GetDevice()));
 	}
+
+	work_around_drain_bug = MaybeDmix(pcm) &&
+		GetRuntimeAlsaVersion() < MakeAlsaVersion(1, 1, 4);
 
 	snd_pcm_nonblock(pcm, 1);
 
@@ -950,7 +978,14 @@ AlsaOutput::DrainInternal()
 
 	/* .. and finally drain the ALSA hardware buffer */
 
-	const int result = snd_pcm_drain(pcm);
+	int result;
+	if (work_around_drain_bug) {
+		snd_pcm_nonblock(pcm, 0);
+		result = snd_pcm_drain(pcm);
+		snd_pcm_nonblock(pcm, 1);
+	} else
+		result = snd_pcm_drain(pcm);
+
 	if (result == 0)
 		return true;
 	else if (result == -EAGAIN)
