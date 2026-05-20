@@ -139,9 +139,6 @@ playlist::PlayId(PlayerControl &pc, unsigned id)
 void
 playlist::PlayNext(PlayerControl &pc)
 {
-	if (!playing)
-		throw PlaylistError::NotPlaying();
-
 	assert(!queue.IsEmpty());
 	assert(queue.IsValidOrder(current));
 
@@ -154,7 +151,8 @@ playlist::PlayNext(PlayerControl &pc)
 	const int next_order = queue.GetNextOrder(current);
 	if (next_order < 0) {
 		/* no song after this one: stop playback */
-		Stop(pc);
+		if (playing)
+			Stop(pc);
 
 		/* reset "current song" */
 		current = -1;
@@ -176,7 +174,13 @@ playlist::PlayNext(PlayerControl &pc)
 			   discard them anyway */
 		}
 
-		PlayOrder(pc, next_order);
+		if (playing)
+			PlayOrder(pc, next_order);
+		else {
+			current = next_order;
+			// don't consume when stopped
+			return;
+		}
 	}
 
 	/* Consume mode removes each played songs. */
@@ -193,9 +197,6 @@ playlist::PlayNext(PlayerControl &pc)
 void
 playlist::PlayPrevious(PlayerControl &pc)
 {
-	if (!playing)
-		throw PlaylistError::NotPlaying();
-
 	assert(!queue.IsEmpty());
 
 	int order;
@@ -211,7 +212,10 @@ playlist::PlayPrevious(PlayerControl &pc)
 		order = current;
 	}
 
-	PlayOrder(pc, order);
+	if (playing)
+		PlayOrder(pc, order);
+	else
+		current = order;
 }
 
 void
