@@ -16,7 +16,7 @@
  */
 class BufferedInputStream final : public InputStream, BufferingInputStream {
 	// TODO: make configurable
-	static constexpr offset_type MAX_SIZE = 128_MiB;
+	static constexpr offset_type MAX_SIZE = 8_MiB;
 
 public:
 	BufferedInputStream(InputStreamPtr _input);
