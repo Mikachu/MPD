@@ -38,6 +38,7 @@
 struct AtariAudioGlobal {
 	unsigned default_songlength;
 	std::string default_genre;
+	float gain_db;
 
 	explicit AtariAudioGlobal(const ConfigBlock &block);
 };
@@ -48,8 +49,9 @@ inline
 AtariAudioGlobal::AtariAudioGlobal(const ConfigBlock &block)
 {
 	default_songlength = block.GetPositiveValue("default_songlength", 0U);
-
 	default_genre = block.GetBlockValue("default_genre", "");
+	const char *s = block.GetBlockValue("gain", "-6");
+	gain_db = strtof(s, nullptr);
 }
 
 static bool
@@ -195,6 +197,10 @@ atariaudio_file_decode(DecoderClient &client, Path path_fs)
 		return;
 
 	client.Ready(audio_format, true, duration);
+
+	auto rgi = ReplayGainInfo::Undefined();
+	rgi.fixed_gain = atariaudio_global->gain_db;
+	client.SubmitReplayGain(&rgi);
 
 	uint64_t t_frames = 0;
 	DecoderCommand cmd;
