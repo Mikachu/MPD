@@ -181,6 +181,13 @@ if libpsgplay_dep.found()
   decoder_plugins_sources += 'PsgplayDecoderPlugin.cxx'
 endif
 
+libatariaudio_dep = c_compiler.find_library('atariaudio',
+                                         required: get_option('atariaudio'))
+decoder_features.set('ENABLE_ATARIAUDIO', libatariaudio_dep.found())
+if libatariaudio_dep.found()
+  decoder_plugins_sources += 'AtariAudioDecoderPlugin.cxx'
+endif
+
 decoder_plugins = static_library(
   'decoder_plugins',
   decoder_plugins_sources,
@@ -204,6 +211,7 @@ decoder_plugins = static_library(
     libopus_dep,
     libsidplay_dep,
     libpsgplay_dep,
+    libatariaudio_dep,
     libsndfile_dep,
     vorbis_dep,
     ogg_dep,

@@ -35,6 +35,7 @@
 #include "plugins/FluidsynthDecoderPlugin.hxx"
 #include "plugins/SidplayDecoderPlugin.hxx"
 #include "plugins/PsgplayDecoderPlugin.hxx"
+#include "plugins/AtariAudioDecoderPlugin.hxx"
 #include "Log.hxx"
 #include "PluginUnavailable.hxx"
 
@@ -87,6 +88,9 @@ constinit const struct DecoderPlugin *const decoder_plugins[] = {
 #endif
 #ifdef ENABLE_PSGPLAY
 	&psgplay_decoder_plugin,
+#endif
+#ifdef ENABLE_ATARIAUDIO
+	&atariaudio_decoder_plugin,
 #endif
 #ifdef ENABLE_WILDMIDI
 	&wildmidi_decoder_plugin,
