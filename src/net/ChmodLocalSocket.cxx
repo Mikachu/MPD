@@ -21,7 +21,7 @@ IsSocket(FileDescriptor fd, const char *path)
 {
 	struct statx stx;
 	if (statx(fd.Get(), "",
-		  AT_EMPTY_PATH|AT_NO_AUTOMOUNT|AT_SYMLINK_NOFOLLOW|AT_STATX_DONT_SYNC,
+		  AT_EMPTY_PATH|AT_NO_AUTOMOUNT|AT_SYMLINK_NOFOLLOW,
 		  STATX_TYPE, &stx) < 0)
 		throw FmtErrno("statx({:?}) failed"sv, path);
 
