@@ -131,8 +131,7 @@ ServerSocket::OneServerSocket::Open()
 		.listen = 5,
 
 #ifdef HAVE_UN
-		/* allow everybody to connect */
-		.mode = 0666,
+		.mode = 0600,
 #endif
 	};
 
