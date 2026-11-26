@@ -51,7 +51,7 @@ static constexpr unsigned DECODERDELAY = 529;
 
 static constexpr Domain mad_domain("mad");
 
-static constexpr std::span<const std::byte>
+static std::span<const std::byte>
 ThisFrameSpan(const struct mad_stream &stream) noexcept
 {
 	assert(stream.this_frame != nullptr);
