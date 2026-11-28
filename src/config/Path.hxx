@@ -3,7 +3,11 @@
 
 #include <string_view>
 
+struct ConfigData;
 class AllocatedPath;
+
+void
+InitPathParser(const ConfigData &config) noexcept;
 
 /**
  * Throws #std::runtime_error on error.

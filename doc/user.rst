@@ -1086,8 +1086,12 @@ simply type::
 
  mpd
 
-This will start :program:`MPD` in the foreground.  To stop it, press
-:kbd:`Ctrl-C` or send ``SIGTERM`` to the process.
+This will start :program:`MPD` as a daemon process (which means it
+detaches from your terminal and continues to run in background).  To
+stop it, send ``SIGTERM`` to the process; if you have configured a
+:confval:`pid_file`, you can use the ``--kill`` option::
+
+ mpd --kill
 
 The best way to manage :program:`MPD` processes is to use a service
 manager such as :program:`systemd`.
@@ -1371,7 +1375,7 @@ Sometimes, it is helpful to run :program:`MPD` in a terminal and follow what hap
 
 .. code-block:: none
 
-    mpd --stderr --verbose
+    mpd --stderr --no-daemon --verbose
 
 Support
 -------
@@ -1515,7 +1519,7 @@ You can extract the backtrace from a core dump, or by running :program:`MPD` in 
 
 .. code-block:: none
 
-    gdb --args mpd --stderr --verbose
+    gdb --args mpd --stderr --no-daemon --verbose
     run
 
 As soon as you have reproduced the crash, type ":command:`bt`" on the

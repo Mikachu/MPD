@@ -2,6 +2,7 @@
 // Copyright The Music Player Daemon Project
 
 #include "Path.hxx"
+#include "Data.hxx"
 #include "fs/AllocatedPath.hxx"
 #include "fs/Traits.hxx"
 #include "fs/XDG.hxx"
@@ -14,6 +15,9 @@
 using std::string_view_literals::operator""sv;
 
 #ifndef _WIN32
+#include <pwd.h>
+
+static const char *configured_user = nullptr;
 
 /**
  * Determine a given user's home directory.
@@ -41,11 +45,38 @@ GetHome()
 	return result;
 }
 
+/**
+ * Determine the configured user's home directory.
+ *
+ * Throws #std::runtime_error on error.
+ */
+static AllocatedPath
+GetConfiguredHome()
+{
+	return configured_user != nullptr
+		? GetHome(configured_user)
+		: GetHome();
+}
+
+#endif
+
+void
+InitPathParser(const ConfigData &config) noexcept
+{
+#ifdef _WIN32
+	(void)config;
+#else
+	configured_user = config.GetString(ConfigOption::USER);
+#endif
+}
+
+#ifndef _WIN32
+
 static AllocatedPath
 GetVariable(std::string_view name)
 {
 	if (name == "HOME"sv)
-		return GetHome();
+		return GetConfiguredHome();
 	else if (name == "XDG_CONFIG_HOME"sv)
 		return GetUserConfigDir();
 	else if (name == "XDG_MUSIC_DIR"sv)
@@ -72,11 +103,11 @@ ParsePath(std::string_view path)
 		path.remove_prefix(1);
 
 		if (path.empty())
-			return GetHome();
+			return GetConfiguredHome();
 
 		const auto [user, rest] = Split(path, '/');
 		const auto home = user.empty()
-			? GetHome()
+			? GetConfiguredHome()
 			: GetHome(std::string{user}.c_str());
 
 		return home / AllocatedPath::FromUTF8Throw(rest);
